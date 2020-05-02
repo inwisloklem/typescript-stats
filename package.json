@@ -1,0 +1,14 @@
+{
+  "name": "typescript-stats",
+  "version": "1.0.0",
+  "dependencies": {
+    "@types/node": "^13.13.4",
+    "concurrently": "^5.2.0",
+    "nodemon": "^2.0.3"
+  },
+  "scripts": {
+    "start:build": "tsc -w",
+    "start:run": "nodemon build/index.js",
+    "start": "concurrently --names 'typescript,node' 'npm run start:build --silent' 'npm run start:run --silent'"
+  }
+}

@@ -1,10 +1,8 @@
 import fs from 'fs'
 
-export abstract class CSVFileReader<Row> {
-  data: Row[] = []
-
-  abstract filename: string
-  abstract mapRow(row: string[]): Row
+export class CSVFileReader {
+  public data: string[][] = []
+  constructor(public filename: string) {}
 
   read(): void {
     try {
@@ -12,7 +10,6 @@ export abstract class CSVFileReader<Row> {
       this.data = csvFile
         .split('\n')
         .map((row: string): string[] => row.split(','))
-        .map(this.mapRow)
     } catch (error) {
       console.error(error.message)
       process.exit(1)

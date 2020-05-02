@@ -1,15 +1,10 @@
-import {MatchReader, MatchRow} from './src/MatchReader'
-import {Result} from './src/Result'
+import {Summary} from './src/Summary'
+import {MatchReader} from './src/MatchReader'
 
-const matchReader = new MatchReader('data.csv')
-matchReader.read()
+const {data} = MatchReader.fromCSV('data.csv')
 
-const manUnitedWins = matchReader.data.reduce((wins: number, row: MatchRow): number => {
-  const index = row.findIndex(column => column === 'Man United')
+const summaryConsole = Summary.winsAnalysisWithConsoleReport('Newcastle')
+summaryConsole.makeAnalysisWithReport(data)
 
-  return (index === 1 && row[5] === Result.HomeWin) || (index === 2 && row[5] === Result.AwayWin)
-    ? wins + 1
-    : wins
-}, 0)
-
-console.info(`Man united wins ${manUnitedWins} games.`)
+const summaryHtml = Summary.winsAnalysisWithHTMLReport('Newcastle')
+summaryHtml.makeAnalysisWithReport(data)

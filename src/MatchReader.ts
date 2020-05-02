@@ -1,18 +1,21 @@
 import {CSVFileReader} from './CSVFileReader'
+import {MatchRow} from './MatchRow'
 import {Result} from './Result'
 import {convertDateStringToDate} from './utils'
 
-export type MatchRow = [Date, string, string, number, number, Result, string]
+export interface DataReader {
+  data: string[][]
+  read(): void
+}
 
-export class MatchReader extends CSVFileReader<MatchRow> {
-  data: MatchRow[] = []
+export class MatchReader {
+  public data: MatchRow[] = []
 
-  constructor(public filename: string) {
-    super()
-  }
+  constructor(public reader: DataReader) {}
 
-  mapRow(row: string[]): MatchRow {
-    return [
+  load(): void {
+    this.reader.read()
+    this.data = this.reader.data.map((row: string[]): MatchRow => [
       convertDateStringToDate(row[0]),
       row[1],
       row[2],
@@ -21,6 +24,13 @@ export class MatchReader extends CSVFileReader<MatchRow> {
       row[5] as Result,
       //     ^^^^^^^^^ type assertion
       row[6],
-    ]
+    ])
+  }
+
+  static fromCSV(filename: string): MatchReader {
+    const matchReader = new MatchReader(new CSVFileReader(filename))
+    matchReader.load()
+
+    return matchReader
   }
 }
